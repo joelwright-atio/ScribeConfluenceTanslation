@@ -41,6 +41,7 @@ CONFLUENCE_PARENT_PAGE_ID = os.getenv("CONFLUENCE_PARENT_PAGE_ID")  # optional
 TARGET_LANGUAGE           = os.getenv("TARGET_LANGUAGE", "de").upper()
 INPUT_DIR                 = Path(os.getenv("INPUT_DIR", "input"))
 OUTPUT_DIR                = Path(os.getenv("OUTPUT_DIR", "output"))
+PROCESSED_DIR             = Path(os.getenv("PROCESSED_DIR", "processed"))
 
 SCRIBE_API_BASE  = "https://api.scribehow.com"
 CONFLUENCE_API   = f"{CONFLUENCE_BASE_URL}/wiki/rest/api" if CONFLUENCE_BASE_URL else ""
@@ -241,8 +242,9 @@ def push_to_confluence() -> None:
 
     print(f"[Confluence] Pushing {len(files)} page(s) to space {CONFLUENCE_SPACE_KEY!r}...")
 
+    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
     for filepath in files:
-        # Derive title from filename: underscores → spaces
         title = filepath.stem.replace("_", " ").strip()
         content = filepath.read_text(encoding="utf-8")
         body = markdown_to_storage(content)
@@ -257,6 +259,13 @@ def push_to_confluence() -> None:
             )
         else:
             create_page(title, body)
+
+        # Move original input file to processed/ and remove intermediate output file
+        input_file = INPUT_DIR / filepath.name
+        if input_file.exists():
+            input_file.rename(PROCESSED_DIR / filepath.name)
+        filepath.unlink()
+        print(f"  Moved to processed/: {filepath.name}")
 
     print("[Confluence] Done.\n")
 
