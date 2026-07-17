@@ -114,7 +114,7 @@ def fetch_all_sops() -> None:
     for sop in sops:
         filename = f"{slugify(sop['title'])}.md"
         filepath = INPUT_DIR / filename
-        print(f"  Downloading: {sop['title']!r} → {filepath}")
+        print(f"  Downloading: {sop['title']!r} -> {filepath}")
         content = fetch_scribe_markdown(sop["id"])
         filepath.write_text(content, encoding="utf-8")
 
@@ -134,14 +134,13 @@ def translate_files() -> None:
         return
 
     translator = deepl.Translator(DEEPL_API_KEY)
-    print(f"[DeepL] Translating {len(files)} file(s) → {TARGET_LANGUAGE}...")
+    print(f"[DeepL] Translating {len(files)} file(s) -> {TARGET_LANGUAGE}...")
 
     for filepath in files:
         text = filepath.read_text(encoding="utf-8")
         result = translator.translate_text(
             text,
             target_lang=TARGET_LANGUAGE,
-            tag_handling="markdown",   # preserves markdown syntax during translation
         )
         out_path = OUTPUT_DIR / filepath.name
         out_path.write_text(result.text, encoding="utf-8")
