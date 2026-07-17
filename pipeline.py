@@ -39,8 +39,8 @@ CONFLUENCE_API_TOKEN      = os.getenv("CONFLUENCE_API_TOKEN")
 CONFLUENCE_SPACE_KEY      = os.getenv("CONFLUENCE_SPACE_KEY")
 CONFLUENCE_PARENT_PAGE_ID = os.getenv("CONFLUENCE_PARENT_PAGE_ID")  # optional
 TARGET_LANGUAGE           = os.getenv("TARGET_LANGUAGE", "de").upper()
-INPUT_DIR                 = Path(os.getenv("INPUT_DIR", "./input"))
-OUTPUT_DIR                = Path(os.getenv("OUTPUT_DIR", "./output"))
+INPUT_DIR                 = Path(os.getenv("INPUT_DIR", "input"))
+OUTPUT_DIR                = Path(os.getenv("OUTPUT_DIR", "output"))
 
 SCRIBE_API_BASE  = "https://api.scribehow.com"
 CONFLUENCE_API   = f"{CONFLUENCE_BASE_URL}/wiki/rest/api" if CONFLUENCE_BASE_URL else ""
